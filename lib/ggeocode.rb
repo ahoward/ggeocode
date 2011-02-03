@@ -1,6 +1,6 @@
 module GGeocode
 
-  GGeocode::Version = '0.0.1'
+  GGeocode::Version = '0.0.2'
 
   def GGeocode.version
     GGeocode::Version
