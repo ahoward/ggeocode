@@ -1,0 +1,16 @@
+NAME
+  ggeocode
+
+SYNOPSIS
+  require 'ggeocode'
+
+  hash = GGeocode.geocode('boulder, co')
+  hash = GGeocode.rgeocode('40.0149856,-105.2705456')
+
+INSTALL
+  gem install ggeocode
+
+DESCRIPTION
+  a simple interface to google's new geocoding api
+
+  see http://code.google.com/apis/maps/documentation/geocoding/
