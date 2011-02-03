@@ -3,12 +3,12 @@
 
 Gem::Specification::new do |spec|
   spec.name = "ggeocode"
-  spec.version = "0.0.1"
+  spec.version = "0.0.2"
   spec.platform = Gem::Platform::RUBY
   spec.summary = "ggeocode"
   spec.description = "description: ggeocode kicks the ass"
 
-  spec.files = ["lib", "lib/ggeocode.rb", "Rakefile", "README"]
+  spec.files = ["ggeocode.gemspec", "lib", "lib/ggeocode.rb", "Rakefile", "README"]
   spec.executables = []
   
   spec.require_path = "lib"
@@ -17,6 +17,8 @@ Gem::Specification::new do |spec|
   spec.test_files = nil
 
 # spec.add_dependency 'lib', '>= version'
+  spec.add_dependency 'map', '>= 2.3.0'
+  spec.add_dependency 'yajl-ruby', '>= 0.7.9'
 
   spec.extensions.push(*[])
 

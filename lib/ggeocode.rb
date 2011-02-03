@@ -1,6 +1,7 @@
 module GGeocode
+### ref: http://code.google.com/apis/maps/documentation/geocoding/
 
-  GGeocode::Version = '0.0.2'
+  GGeocode::Version = '0.0.3'
 
   def GGeocode.version
     GGeocode::Version
@@ -21,24 +22,43 @@ module GGeocode
   require 'yajl/json_gem'
   require 'map'
 
+  AddressPattern = /\w/iox
 
-  def geocode(string)
-    response = get(url_for(:address => string))
+  def geocode(*args, &block)
+    options = Map.options_for!(args)
+    if options[:reverse]
+      args.push(options)
+      return reverse_geocode(*args, &block)
+    end
+    string = args.join(' ')
+    address = address_for(string)
+    response = get(url_for(:address => address))
     result_for(response)
   end
 
-  def reverse_geocode(string)
-    response = get(url_for(:latlng => string))
+  def reverse_geocode(*args, &block)
+    options = Map.options_for!(args)
+    string = args.join(' ')
+    latlng = latlng_for(string)
+    response = get(url_for(:latlng => latlng))
     result_for(response)
   end
   alias_method('rgeocode', 'reverse_geocode')
 
-  module Response
-    attr_accessor :response
+  def GGeocode.call(*args, &block)
+    options = Map.options_for!(args)
+    string = args.join(' ')
+    reverse = string !~ AddressPattern || options[:reverse]
+    reverse ? GGeocode.reverse_geocode(string) : GGeocode.geocode(string)
+  end
 
-    def body
-      response.body
-    end
+  def latlng_for(string)
+    lat, lng = string.scan(/[^\s,]+/)
+    latlng = [lat, lng].join(',')
+  end
+
+  def address_for(string)
+    string.to_s.strip
   end
 
   def result_for(response)
@@ -51,6 +71,14 @@ module GGeocode
     map['status'] = hash['status']
     map['results'] = hash['results']
     map
+  end
+
+  module Response
+    attr_accessor :response
+    def body
+      response.body
+    end
+    alias_method('json', 'body')
   end
 
   Url = URI.parse("http://maps.google.com/maps/api/geocode/json?")
@@ -92,7 +120,21 @@ module GGeocode
   extend(GGeocode)
 end
 
+module Kernel
+private
+  def GGeocode(*args, &block)
+    GGeocode.call(*args, &block)
+  end
+end
+
 Ggeocode = GGeocode
+
+BEGIN {
+  if defined?(GGeocode)
+    Object.send(:remove_const, :GGeocode)
+    Object.send(:remove_const, :Ggeocode)
+  end
+}
 
 
 if $0 == __FILE__
