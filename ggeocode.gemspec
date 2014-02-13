@@ -6,7 +6,7 @@ Gem::Specification::new do |spec|
   spec.version = "0.0.2"
   spec.platform = Gem::Platform::RUBY
   spec.summary = "ggeocode"
-  spec.description = "description: ggeocode kicks the ass"
+  spec.description = "simple wrapper on google's new geocoding api"
 
   spec.files = ["ggeocode.gemspec", "lib", "lib/ggeocode.rb", "Rakefile", "README"]
   spec.executables = []
